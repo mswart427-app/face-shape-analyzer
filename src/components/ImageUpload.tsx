@@ -157,18 +157,18 @@ export default function ImageUpload() {
         ref={fileInputRef}
       />
 
-      <div className="flex justify-center w-full">
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="px-6 py-3 bg-[#85714d] text-white rounded-lg hover:bg-[#6b5a3e] transition-colors font-primary text-base"
-        >
-          Upload Image
-        </button>
-      </div>
-
-      {selectedImage && (
-        <div className="mt-6 flex flex-col items-center gap-4">
-          <div className="relative w-full max-w-md">
+      <div className="w-full max-w-md mb-4">
+        {!selectedImage ? (
+          <div className="aspect-[4/3] bg-white rounded-lg shadow-lg flex items-center justify-center relative">
+            <div className="text-center p-6">
+              <p className="text-gray-500 font-secondary text-lg">
+                Upload your photo for personalized style matches
+              </p>
+            </div>
+            <div className="absolute inset-0 border-2 border-dashed border-gray-300 rounded-lg m-4" />
+          </div>
+        ) : (
+          <div className="relative">
             <img
               ref={imageRef}
               src={selectedImage}
@@ -180,7 +180,20 @@ export default function ImageUpload() {
               className="w-full rounded-lg shadow-lg"
             />
           </div>
+        )}
+      </div>
 
+      <div className="flex justify-center w-full">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="px-6 py-3 bg-[#85714d] text-white rounded-lg hover:bg-[#6b5a3e] transition-colors font-primary text-base"
+        >
+          Upload Photo
+        </button>
+      </div>
+
+      {selectedImage && (
+        <div className="mt-6 flex flex-col items-center gap-4">
           <div className="flex justify-center w-full">
             <button
               onClick={analyzeFaceShape}
@@ -196,7 +209,7 @@ export default function ImageUpload() {
               <h3 className="text-[24px] font-semibold mb-4 font-primary">
                 Personalized Style Report
               </h3>
-              <div className="bg-white p-6 rounded-lg shadow-md font-secondary">
+              <div className="bg-white/90 p-6 rounded-lg shadow-md font-secondary">
                 <div className="mb-4">
                   <span className="text-lg font-primary">Face Shape: </span>
                   <span className="text-lg font-semibold">{faceShape}</span>
