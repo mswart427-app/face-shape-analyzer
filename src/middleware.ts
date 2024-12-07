@@ -4,12 +4,18 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
-  // Add permissive headers
-  response.headers.set('Access-Control-Allow-Origin', '*')
-  response.headers.set('Access-Control-Allow-Methods', '*')
+  // Add headers specifically for myhairmail.com
+  response.headers.set('Access-Control-Allow-Origin', 'https://myhairmail.com')
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
   response.headers.set('Access-Control-Allow-Headers', '*')
-  response.headers.set('X-Frame-Options', 'ALLOWALL')
-  response.headers.set('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval'; frame-ancestors *;")
+  
+  // Set frame-ancestors for Shopify specifically
+  response.headers.set('Content-Security-Policy', 
+    "frame-ancestors 'self' https://myhairmail.com https://*.myshopify.com https://admin.shopify.com;"
+  )
+
+  // Remove restrictive headers
+  response.headers.delete('X-Frame-Options')
   response.headers.delete('X-Content-Type-Options')
 
   return response
