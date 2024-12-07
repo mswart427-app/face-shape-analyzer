@@ -17,9 +17,14 @@ export default function HairstyleExamples({ faceShape }: { faceShape: FaceShape 
   }
 
   return (
-    <div className="mt-4">
-      <h4 className="font-semibold mb-2">Recommended Styles:</h4>
-      <div className="grid grid-cols-3 gap-4">
+    <div className="mt-6">
+      <h4 className="text-[20px] font-semibold mb-3 font-primary">
+        Styles That Complement Your Shape:
+      </h4>
+      <p className="text-gray-600 mb-6 font-secondary">
+        Based on your features, here are three styles that could work beautifully for you. These suggestions are a starting point for finding your perfect look.
+      </p>
+      <div className="grid grid-cols-3 gap-6">
         {Object.entries(styles).map(([key, style]) => (
           <Link 
             href={style.productUrl}
@@ -27,9 +32,7 @@ export default function HairstyleExamples({ faceShape }: { faceShape: FaceShape 
             target="_blank"
             className="group relative cursor-pointer"
           >
-            <div 
-              className="aspect-[1/1.15] rounded-lg overflow-hidden"
-            >
+            <div className="aspect-[1/1.15] rounded-lg overflow-hidden">
               <Image
                 src={imageError[key] ? 'https://placehold.co/400x400/png?text=Image+Not+Found' : style.imageUrl}
                 alt={style.productName}
@@ -38,9 +41,9 @@ export default function HairstyleExamples({ faceShape }: { faceShape: FaceShape 
                 onError={() => handleImageError(key)}
               />
             </div>
-            <div className="mt-2">
-              <h5 className="font-medium text-sm">{style.productName}</h5>
-              <p className="text-sm text-gray-600">{style.description}</p>
+            <div className="mt-3">
+              <h5 className="font-primary text-base font-semibold">{style.productName}</h5>
+              <p className="font-secondary text-sm text-gray-600">{style.description}</p>
             </div>
           </Link>
         ))}

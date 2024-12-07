@@ -134,15 +134,19 @@ export default function ImageUpload() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="text-center mb-4">
-        <h2 className="text-lg font-semibold mb-2">Photo Requirements:</h2>
-        <ul className="text-sm text-gray-600">
-          <li>• Face should be clearly visible</li>
-          <li>• Good lighting</li>
-          <li>• Front-facing pose</li>
-          <li>• No obstructions (hair, glasses, etc.)</li>
-        </ul>
+    <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto px-4">
+      <div className="max-w-md w-full">
+        <h2 className="font-primary text-[24px] font-semibold mb-6 text-center">
+          Let's Find Your Perfect Style
+        </h2>
+        <div className="font-secondary">
+          <ul className="text-base text-gray-600 space-y-1 pl-[100px]">
+            <li>• Face should be clearly visible</li>
+            <li>• Good lighting</li>
+            <li>• Front-facing pose</li>
+            <li>• No obstructions (hair, glasses, etc.)</li>
+          </ul>
+        </div>
       </div>
 
       <input
@@ -153,15 +157,17 @@ export default function ImageUpload() {
         ref={fileInputRef}
       />
 
-      <button
-        onClick={() => fileInputRef.current?.click()}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-      >
-        Upload Image
-      </button>
+      <div className="flex justify-center w-full">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="px-6 py-3 bg-[#85714d] text-white rounded-lg hover:bg-[#6b5a3e] transition-colors font-primary text-base"
+        >
+          Upload Image
+        </button>
+      </div>
 
       {selectedImage && (
-        <div className="mt-4 flex flex-col items-center gap-4">
+        <div className="mt-6 flex flex-col items-center gap-4">
           <div className="relative w-full max-w-md">
             <img
               ref={imageRef}
@@ -175,39 +181,45 @@ export default function ImageUpload() {
             />
           </div>
 
-          <button
-            onClick={analyzeFaceShape}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-            disabled={analyzing}
-          >
-            {analyzing ? 'Analyzing...' : 'Analyze Face Shape'}
-          </button>
+          <div className="flex justify-center w-full">
+            <button
+              onClick={analyzeFaceShape}
+              className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-primary text-base"
+              disabled={analyzing}
+            >
+              {analyzing ? 'Analyzing...' : 'Analyze Face Shape'}
+            </button>
+          </div>
 
           {faceShape && FACE_SHAPE_DESCRIPTIONS[faceShape] && (
-            <div className="mt-4 max-w-md w-full">
-              <h3 className="text-xl font-bold mb-2">
-                Face Shape: {faceShape}
+            <div className="mt-6 max-w-md w-full">
+              <h3 className="text-[24px] font-semibold mb-4 font-primary">
+                Personalized Style Report
               </h3>
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <p className="text-gray-700 mb-2">
+              <div className="bg-white p-6 rounded-lg shadow-md font-secondary">
+                <div className="mb-4">
+                  <span className="text-lg font-primary">Face Shape: </span>
+                  <span className="text-lg font-semibold">{faceShape}</span>
+                </div>
+                <p className="text-gray-700 mb-4">
                   {FACE_SHAPE_DESCRIPTIONS[faceShape].description}
                 </p>
-                <h4 className="font-semibold mt-3 mb-1">Characteristics:</h4>
-                <ul className="list-disc pl-5 mb-3">
+                <h4 className="text-[20px] font-semibold mb-2 font-primary">Characteristics:</h4>
+                <ul className="list-disc pl-5 mb-4 text-gray-600">
                   {FACE_SHAPE_DESCRIPTIONS[faceShape].characteristics.map((char, i) => (
-                    <li key={i} className="text-gray-600">{char}</li>
+                    <li key={i}>{char}</li>
                   ))}
                 </ul>
-                <h4 className="font-semibold mb-1">Recommended Styles:</h4>
-                <ul className="list-disc pl-5 mb-3">
+                <h4 className="text-[20px] font-semibold mb-2 font-primary">Recommended Styles:</h4>
+                <ul className="list-disc pl-5 mb-4 text-gray-600">
                   {FACE_SHAPE_DESCRIPTIONS[faceShape].bestStyles.map((style, i) => (
-                    <li key={i} className="text-gray-600">{style}</li>
+                    <li key={i}>{style}</li>
                   ))}
                 </ul>
-                <h4 className="font-semibold mb-1">Styles to Avoid:</h4>
-                <ul className="list-disc pl-5 mb-3">
+                <h4 className="text-[20px] font-semibold mb-2 font-primary">Styles to Avoid:</h4>
+                <ul className="list-disc pl-5 mb-4 text-gray-600">
                   {FACE_SHAPE_DESCRIPTIONS[faceShape].avoidStyles.map((style, i) => (
-                    <li key={i} className="text-gray-600">{style}</li>
+                    <li key={i}>{style}</li>
                   ))}
                 </ul>
                 <HairstyleExamples faceShape={faceShape} />
