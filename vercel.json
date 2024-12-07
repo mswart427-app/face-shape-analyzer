@@ -6,11 +6,11 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-ancestors https://*.myshopify.com https://myhairmail.com https://myhairmail.myshopify.com; img-src 'self' data: https://myhairmail.com; connect-src 'self' https://*.tensorflow.org https://*.githubusercontent.com https://tfhub.dev https://*.tfhub.dev https://*.kaggle.com https://www.kaggle.com; worker-src 'self' blob:; font-src 'self' https://myhairmail.com data: https://*.myshopify.com;"
+          "value": "default-src 'self' https://*.tensorflow.org https://*.tfhub.dev https://*.kaggle.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.tensorflow.org; style-src 'self' 'unsafe-inline'; frame-ancestors https://*.myshopify.com https://myhairmail.com https://myhairmail.myshopify.com; img-src 'self' data: https://myhairmail.com blob:; connect-src 'self' https://*.tensorflow.org https://*.githubusercontent.com https://tfhub.dev https://*.tfhub.dev https://*.kaggle.com https://www.kaggle.com https://storage.googleapis.com https://*.storage.googleapis.com; worker-src 'self' blob:; font-src 'self' https://myhairmail.com data: https://*.myshopify.com; media-src 'self' blob:;"
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://myhairmail.com"
+          "value": "*"
         },
         {
           "key": "Permissions-Policy",
