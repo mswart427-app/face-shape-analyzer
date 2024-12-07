@@ -6,7 +6,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-ancestors https://*.myshopify.com https://myhairmail.com https://myhairmail.myshopify.com; img-src 'self' data: https://myhairmail.com; connect-src 'self' https://*.tensorflow.org https://*.githubusercontent.com; worker-src 'self' blob:;"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-ancestors https://*.myshopify.com https://myhairmail.com https://myhairmail.myshopify.com; img-src 'self' data: https://myhairmail.com; connect-src 'self' https://*.tensorflow.org https://*.githubusercontent.com https://tfhub.dev https://*.tfhub.dev; worker-src 'self' blob:; font-src 'self' https://myhairmail.com;"
         },
         {
           "key": "Access-Control-Allow-Origin",
