@@ -7,15 +7,26 @@ const nextConfig = {
         hostname: 'myhairmail.com',
         port: '',
         pathname: '/cdn/shop/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
       }
     ],
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'  // Allow embedding from any domain for now
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET'
+          }
+        ]
+      }
+    ]
+  }
 }
 
 module.exports = nextConfig 
