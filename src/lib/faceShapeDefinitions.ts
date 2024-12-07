@@ -1,4 +1,12 @@
 // Define the interface first
+interface StyleImage {
+  imageUrl: string;      // URL to the product image
+  productUrl: string;    // URL to purchase the product
+  productName: string;   // Name of the product/style
+  description: string;   // Brief description
+  price?: string;        // Optional price
+}
+
 interface FaceShapeDetails {
   description: string;
   recommendations: string;
@@ -6,7 +14,7 @@ interface FaceShapeDetails {
   bestStyles: string[];
   avoidStyles: string[];
   styleImages: {
-    [key: string]: string;
+    [key: string]: StyleImage;
   };
 }
 
@@ -31,9 +39,27 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Chin-length bobs that align with jawline'
     ],
     styleImages: {
-      softLayers: '/images/hairstyles/square/soft-layers.jpg',
-      sideSweep: '/images/hairstyles/square/side-sweep.jpg',
-      texturedLob: '/images/hairstyles/square/textured-lob.jpg'
+      softLayers: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Alive_03_1024x1024_d9aba1e6-138c-45ca-9c71-849818c78498.webp?v=1683418305',
+        productUrl: 'https://myhairmail.com/collections/ellen-wille-wigs/products/alive-changes-collection-synthetic-wig',
+        productName: 'Alive by Ellen Wille',
+        description: 'Soft, all-over layers with subtle flip at ends',
+        price: '$344.25'
+      },
+      texturedLayers: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Textured+Layers',
+        productUrl: '#',
+        productName: 'Textured Layers Style',
+        description: 'Medium length with textured layers',
+        price: 'Coming Soon'
+      },
+      sideSweepLayers: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Side+Sweep+Layers',
+        productUrl: '#',
+        productName: 'Side-Swept Layers',
+        description: 'Long layers with side-swept styling',
+        price: 'Coming Soon'
+      }
     }
   },
   'Oval': {
@@ -57,9 +83,27 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Very short layers that add too much height'
     ],
     styleImages: {
-      longWaves: '/images/hairstyles/oval/long-waves.jpg',
-      pixieCut: '/images/hairstyles/oval/pixie-cut.jpg',
-      bluntBob: '/images/hairstyles/oval/blunt-bob.jpg'
+      longWaves: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/rosie_6-33_alt1__61286.jpg?v=1726521809',
+        productUrl: 'https://myhairmail.com/collections/jon-renau-wigs/products/rosie-by-jon-renau',
+        productName: 'Rosie by Jon Renau',
+        description: 'Classic long waves with natural movement',
+        price: '$359.00'
+      },
+      pixieCut: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Pixie+Cut',
+        productUrl: '/products/pixie-cut',
+        productName: 'Pixie Cut',
+        description: 'Short pixie cut hairstyle for an oval face shape',
+        price: '$20'
+      },
+      bluntBob: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Blunt+Bob',
+        productUrl: '/products/blunt-bob',
+        productName: 'Blunt Bob',
+        description: 'Blunt bob hairstyle for an oval face shape',
+        price: '$18'
+      }
     }
   },
   'Round': {
@@ -83,9 +127,27 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Blunt bangs that create horizontal lines'
     ],
     styleImages: {
-      longBob: '/images/hairstyles/round/long-bob.jpg',
-      sideSweep: '/images/hairstyles/round/side-sweep.jpg',
-      texturedCrop: '/images/hairstyles/round/textured-crop.jpg'
+      longBob: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/RW-Take-A-Bow-Model-1-Front-2-scaled-625x782_360x.jpg?v=1714511953',
+        productUrl: 'https://myhairmail.com/collections/raquel-welch-wigs/products/take-a-bow-by-raquel-welch',
+        productName: 'Take A Bow by Raquel Welch',
+        description: 'Sleek, face-lengthening style with subtle layers',
+        price: '$379.00'
+      },
+      sideSweep: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
+        productUrl: '/products/side-sweep',
+        productName: 'Side-Swept Bangs',
+        description: 'Side-swept bangs for a round face shape',
+        price: '$15'
+      },
+      texturedCrop: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Textured+Crop',
+        productUrl: '/products/textured-crop',
+        productName: 'Textured Crop',
+        description: 'Textured crop hairstyle for a round face shape',
+        price: '$18'
+      }
     }
   },
   'Diamond': {
@@ -107,9 +169,27 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Styles that add volume at cheekbones'
     ],
     styleImages: {
-      sideSweep: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
-      chinLength: 'https://placehold.co/400x400/png?text=Chin+Length+Cut',
-      wispyLayers: 'https://placehold.co/400x400/png?text=Wispy+Layers'
+      sideSweep: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/RW-Love-Always-Raquel-Model-4-Front-1-slide_360x.jpg?v=1731363408',
+        productUrl: 'https://myhairmail.com/collections/raquel-welch-wigs/products/love-always-by-raquel-welch',
+        productName: 'Love Always by Raquel Welch',
+        description: 'Side-swept style with face-framing layers',
+        price: '$399.00'
+      },
+      chinLength: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Chin+Length+Cut',
+        productUrl: '/products/chin-length-cut',
+        productName: 'Chin-Length Cut',
+        description: 'Chin-length cut hairstyle for a diamond face shape',
+        price: '$18'
+      },
+      wispyLayers: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Wispy+Layers',
+        productUrl: '/products/wispy-layers',
+        productName: 'Wispy Layers',
+        description: 'Wispy layers hairstyle for a diamond face shape',
+        price: '$20'
+      }
     }
   },
   'Heart': {
@@ -131,9 +211,34 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Styles that add volume at the crown'
     ],
     styleImages: {
-      chinBob: 'https://placehold.co/400x400/png?text=Chin+Length+Bob',
-      sideSweep: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
-      layered: 'https://placehold.co/400x400/png?text=Face+Framing+Layers'
+      chinBob: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Chin+Length+Bob',
+        productUrl: '/products/chin-length-bob',
+        productName: 'Chin-Length Bob',
+        description: 'Chin-length bob hairstyle for a heart face shape',
+        price: '$18'
+      },
+      sideSweep: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
+        productUrl: '/products/side-swept-bangs',
+        productName: 'Side-Swept Bangs',
+        description: 'Side-swept bangs for a heart face shape',
+        price: '$15'
+      },
+      layered: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Face+Framing+Layers',
+        productUrl: '/products/face-framing-layers',
+        productName: 'Face-Framing Layers',
+        description: 'Face-framing layers hairstyle for a heart face shape',
+        price: '$20'
+      },
+      beachWaves: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/California_Beach_Waves_360x.jpg?v=1723763637',
+        productUrl: 'https://myhairmail.com/collections/tressallure-wigs/products/california-beach-waves-by-tressallure-mono-top-look-fabulous-realistic',
+        productName: 'California Beach Waves by Tressallure',
+        description: 'Textured waves with face-framing pieces',
+        price: '$299.00'
+      }
     }
   },
   'Oblong': {
@@ -155,9 +260,27 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Styles that add height at crown'
     ],
     styleImages: {
-      sideSweep: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
-      layered: 'https://placehold.co/400x400/png?text=Layered+Cut',
-      wavy: 'https://placehold.co/400x400/png?text=Waves+and+Curls'
+      sideSweep: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
+        productUrl: '/products/side-swept-bangs',
+        productName: 'Side-Swept Bangs',
+        description: 'Side-swept bangs for an oblong face shape',
+        price: '$15'
+      },
+      layered: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Seville_crushedalmondblonde-R1_360x.jpg?v=1728750264',
+        productUrl: 'https://myhairmail.com/collections/belle-tress-wigs/products/seville-by-belle-tress-city-collection',
+        productName: 'Seville by Belle Tress',
+        description: 'Layered cut with width-adding volume',
+        price: '$329.00'
+      },
+      wavy: {
+        imageUrl: 'https://placehold.co/400x400/png?text=Waves+and+Curls',
+        productUrl: '/products/waves-and-curls',
+        productName: 'Waves and Curls',
+        description: 'Waves and curls hairstyle for an oblong face shape',
+        price: '$20'
+      }
     }
   }
 } as const;

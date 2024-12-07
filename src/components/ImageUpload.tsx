@@ -23,19 +23,36 @@ export default function ImageUpload() {
     loadModel()
   }, [])
 
+  const isValidFaceShape = (shape: string): shape is FaceShape => {
+    return shape in FACE_SHAPE_DESCRIPTIONS;
+  }
+
   const analyzeFaceShape = async () => {
     if (!model || !imageRef.current || !canvasRef.current) return
 
     setAnalyzing(true)
     try {
+      console.log('Starting face detection...')
       const predictions = await model.estimateFaces(imageRef.current, {
         flipHorizontal: false,
         staticImageMode: true
       })
 
-      if (predictions.length > 0) {
+      console.log('Raw predictions:', predictions)
+
+      if (predictions && predictions.length > 0) {
+        console.log('Number of faces detected:', predictions.length)
         const keypoints = predictions[0].keypoints
-        
+        console.log('Number of keypoints:', keypoints?.length)
+        console.log('First few keypoints:', keypoints?.slice(0, 5))
+
+        if (!keypoints || keypoints.length === 0) {
+          console.error('No keypoints found in the detected face')
+          setFaceShape(null)
+          alert('Unable to detect facial features clearly. Please try a different photo.')
+          return
+        }
+
         // Draw landmarks on canvas
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
@@ -59,15 +76,26 @@ export default function ImageUpload() {
           drawFaceLandmarks(ctx, scaledKeypoints)
         }
 
-        // Calculate face shape
-        const shape = calculateFaceShape(keypoints) as FaceShape
-        setFaceShape(shape)
+        // Calculate face shape with type checking
+        const shape = calculateFaceShape(keypoints)
+        console.log('Calculated Shape:', shape)
+        
+        if (isValidFaceShape(shape)) {
+          console.log('Valid face shape detected:', shape)
+          setFaceShape(shape)
+        } else {
+          console.error('Invalid face shape detected:', shape, 'Valid shapes:', Object.keys(FACE_SHAPE_DESCRIPTIONS))
+          setFaceShape(null)
+          alert('Unable to determine face shape accurately. Please try a different photo.')
+        }
       } else {
+        console.error('No predictions returned from model')
         setFaceShape(null)
         alert('No face detected - Please ensure face is clearly visible')
       }
     } catch (error) {
-      console.error('Error analyzing face:', error)
+      console.error('Detailed error in face analysis:', error)
+      setFaceShape(null)
       alert('Error analyzing face - Please try a different photo')
     }
     setAnalyzing(false)
@@ -76,6 +104,7 @@ export default function ImageUpload() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      console.log('File selected:', file.name, file.type)
       const reader = new FileReader()
       reader.onload = (e) => {
         setSelectedImage(e.target?.result as string)
@@ -84,14 +113,14 @@ export default function ImageUpload() {
         // Create new image to get dimensions
         const img = new Image()
         img.onload = () => {
+          console.log('Image loaded with dimensions:', img.width, 'x', img.height)
           if (canvasRef.current) {
-            // Set canvas size to match display size
-            const maxWidth = 500 // or whatever max width you want
+            const maxWidth = 500
             const scaleFactor = maxWidth / img.width
             canvasRef.current.width = maxWidth
             canvasRef.current.height = img.height * scaleFactor
+            console.log('Canvas dimensions set to:', canvasRef.current.width, 'x', canvasRef.current.height)
             
-            // Draw initial image on canvas
             const ctx = canvasRef.current.getContext('2d')
             if (ctx) {
               ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height)
@@ -154,7 +183,7 @@ export default function ImageUpload() {
             {analyzing ? 'Analyzing...' : 'Analyze Face Shape'}
           </button>
 
-          {faceShape && (
+          {faceShape && FACE_SHAPE_DESCRIPTIONS[faceShape] && (
             <div className="mt-4 max-w-md w-full">
               <h3 className="text-xl font-bold mb-2">
                 Face Shape: {faceShape}

@@ -3,13 +3,20 @@ import { FACE_POINTS } from './faceDetection'
 
 export const calculateFaceShape = (keypoints: Keypoint[]) => {
   const measurements = getFaceMeasurements(keypoints)
+  
+  // Add detailed logging
   console.log('Face Measurements:', {
     heightToWidthRatio: measurements.heightToWidthRatio.toFixed(2),
     foreheadToJawRatio: measurements.foreheadToJawRatio.toFixed(2),
     cheekToJawRatio: measurements.cheekToJawRatio.toFixed(2),
-    jawAngle: measurements.jawAngle.toFixed(2)
+    jawAngle: measurements.jawAngle.toFixed(2),
+    cheekbonePosition: measurements.cheekbonePosition.toFixed(2),
+    chinShape: measurements.chinShape.toFixed(2)
   })
-  return determineFaceShape(measurements)
+
+  const shape = determineFaceShape(measurements)
+  console.log('Determined Shape:', shape)
+  return shape
 }
 
 interface FaceMeasurements {
@@ -152,25 +159,40 @@ const calculateAngle = (p1: Keypoint, p2: Keypoint, p3: Keypoint): number => {
 const determineFaceShape = (measurements: FaceMeasurements): string => {
   const { heightToWidthRatio, foreheadToJawRatio, cheekToJawRatio, jawAngle } = measurements
 
-  // Adjusted thresholds based on typical face proportions
+  // Log the decision process
+  console.log('Shape Determination Process:', {
+    heightToWidthRatio,
+    foreheadToJawRatio,
+    cheekToJawRatio,
+    jawAngle
+  })
+
+  // Adjusted thresholds and added more logging
   if (heightToWidthRatio > 1.6) {
+    console.log('Detected as Oblong due to height/width ratio > 1.6')
     return 'Oblong'
   }
 
   if (foreheadToJawRatio > 1.15) {
-    return Math.abs(jawAngle) < 15 ? 'Heart' : 'Diamond'
+    const shape = Math.abs(jawAngle) < 15 ? 'Heart' : 'Diamond'
+    console.log(`Detected as ${shape} due to forehead/jaw ratio > 1.15`)
+    return shape
   }
 
   if (heightToWidthRatio > 1.3) {
-    return cheekToJawRatio > 1.05 ? 'Oval' : 'Round'
+    const shape = cheekToJawRatio > 1.05 ? 'Oval' : 'Round'
+    console.log(`Detected as ${shape} based on height/width and cheek/jaw ratios`)
+    return shape
   }
 
-  // Square vs Rectangle determination
   if (heightToWidthRatio < 1.2) {
-    return Math.abs(jawAngle) < 10 ? 'Square' : 'Rectangle'
+    const shape = Math.abs(jawAngle) < 10 ? 'Square' : 'Rectangle'
+    console.log(`Detected as ${shape} based on height/width ratio < 1.2`)
+    return shape
   }
 
-  return 'Oval' // Default to oval if no clear match
+  console.log('Defaulting to Oval shape')
+  return 'Oval'
 }
 
 const calculateJawAngle = (jawLeft: Keypoint, jawRight: Keypoint, chin: Keypoint) => {

@@ -1,57 +1,53 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { FACE_SHAPE_DESCRIPTIONS, FaceShape } from '@/lib/faceShapeDefinitions'
 
-interface HairstyleExamplesProps {
-  faceShape: FaceShape;
-}
-
-export default function HairstyleExamples({ faceShape }: HairstyleExamplesProps) {
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
+export default function HairstyleExamples({ faceShape }: { faceShape: FaceShape }) {
+  const [imageError, setImageError] = useState<{[key: string]: boolean}>({})
   const styles = FACE_SHAPE_DESCRIPTIONS[faceShape].styleImages
+
+  const handleImageError = (key: string) => {
+    setImageError(prev => ({
+      ...prev,
+      [key]: true
+    }))
+  }
 
   return (
     <div className="mt-4">
-      <h4 className="font-semibold mb-2">Hairstyle Examples:</h4>
+      <h4 className="font-semibold mb-2">Recommended Styles:</h4>
       <div className="grid grid-cols-3 gap-4">
-        {Object.entries(styles).map(([styleName, imageUrl]) => (
-          <div
-            key={styleName}
-            className="relative cursor-pointer group"
-            onClick={() => setSelectedStyle(styleName)}
+        {Object.entries(styles).map(([key, style]) => (
+          <Link 
+            href={style.productUrl}
+            key={key}
+            target="_blank"
+            className="group relative cursor-pointer"
           >
             <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
               <Image
-                src={imageUrl}
-                alt={`${styleName} hairstyle`}
+                src={imageError[key] ? 'https://placehold.co/400x400/png?text=Image+Not+Found' : style.imageUrl}
+                alt={style.productName}
                 fill
                 className="object-cover transition-transform group-hover:scale-105"
+                onError={() => handleImageError(key)}
               />
+              {style.price && (
+                <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm font-semibold">
+                  {style.price}
+                </div>
+              )}
             </div>
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity" />
-            <p className="text-sm text-center mt-1 capitalize">
-              {styleName.replace(/([A-Z])/g, ' $1').trim()}
-            </p>
-          </div>
+            <div className="mt-2">
+              <h5 className="font-medium text-sm">{style.productName}</h5>
+              <p className="text-sm text-gray-600">{style.description}</p>
+            </div>
+          </Link>
         ))}
       </div>
-
-      {selectedStyle && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h5 className="font-medium mb-2 capitalize">
-            {selectedStyle.replace(/([A-Z])/g, ' $1').trim()}
-          </h5>
-          <p className="text-sm text-gray-600">
-            {/* Add detailed description for each style */}
-            This style works well with your {faceShape.toLowerCase()} face shape by 
-            {faceShape === 'Round' ? ' creating length and definition.' : 
-             faceShape === 'Square' ? ' softening angular features.' : 
-             ' enhancing your natural proportions.'}
-          </p>
-        </div>
-      )}
     </div>
   )
 } 
