@@ -21,15 +21,19 @@ const nextConfig = {
           },
           {
             key: 'Access-Control-Allow-Methods',
-            value: 'GET'
+            value: 'GET, POST, OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-Requested-With, Content-Type, Accept'
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; frame-ancestors 'self' https://*.myshopify.com https://*.myhairmail.com https://myhairmail.com; img-src 'self' https: data:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*;"
+            value: "default-src * 'unsafe-inline' 'unsafe-eval'; frame-ancestors *; img-src * data:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src *;"
           },
           {
             key: 'X-Frame-Options',
-            value: 'ALLOWALL'
+            value: 'SAMEORIGIN'
           }
         ]
       }
