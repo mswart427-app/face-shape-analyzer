@@ -11,6 +11,8 @@ export function middleware(request: NextRequest) {
   response.headers.set('Access-Control-Allow-Headers', '*')
   response.headers.set('Access-Control-Allow-Credentials', 'true')
   response.headers.set('X-Frame-Options', 'ALLOWALL')
+  response.headers.set('Content-Security-Policy', 'frame-ancestors *')
+  response.headers.delete('X-Content-Type-Options')
 
   return response
 }
