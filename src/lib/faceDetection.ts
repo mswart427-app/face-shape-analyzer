@@ -52,7 +52,14 @@ export const FACE_POINTS = {
   cheekRight: 352,
   leftEye: 33,
   rightEye: 263,
-  noseTip: 1
+  noseTip: 1,
+  chinLeft: 148,
+  chinRight: 378,
+  eyebrowTop: 66,
+  templeLeft: 247,
+  templeRight: 467,
+  jawlineMiddleLeft: 172,
+  jawlineMiddleRight: 397
 }
 
 export const drawFaceLandmarks = (
