@@ -46,6 +46,8 @@ export const FACE_POINTS = {
   jawRight: 454,
   chin: 152,
   foreheadTop: 10,
+  foreheadLeft: 21,
+  foreheadRight: 251,
   cheekLeft: 123,
   cheekRight: 352,
   leftEye: 33,
