@@ -5,11 +5,11 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; frame-ancestors https://*.myshopify.com https://myhairmail.com https://admin.shopify.com; img-src 'self' data: https:; connect-src 'self' https:;"
+          "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; frame-ancestors https://*.myshopify.com https://myhairmail.com https://myhairmail.myshopify.com https://admin.shopify.com; img-src 'self' data: https:; connect-src 'self' https:;"
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://myhairmail.com"
+          "value": "https://myhairmail.myshopify.com https://myhairmail.com"
         },
         {
           "key": "Access-Control-Allow-Methods",
