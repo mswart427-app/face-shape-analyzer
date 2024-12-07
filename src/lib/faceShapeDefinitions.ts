@@ -41,24 +41,24 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
     styleImages: {
       softLayers: {
         imageUrl: 'https://myhairmail.com/cdn/shop/files/Alive_03_1024x1024_d9aba1e6-138c-45ca-9c71-849818c78498.webp?v=1683418305',
-        productUrl: 'https://myhairmail.com/collections/ellen-wille-wigs/products/alive-changes-collection-synthetic-wig',
+        productUrl: 'https://myhairmail.com/collections/wavy-wigs/products/alive-changes-collection-synthetic-wig',
         productName: 'Alive by Ellen Wille',
         description: 'Soft, all-over layers with subtle flip at ends',
         price: '$344.25'
       },
       texturedLayers: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Textured+Layers',
-        productUrl: '#',
-        productName: 'Textured Layers Style',
-        description: 'Medium length with textured layers',
-        price: 'Coming Soon'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Celeste_FS24_102S12_HD_Main.png?v=1728756848',
+        productUrl: 'https://myhairmail.com/collections/jon-renau-wigs/products/celeste-by-jon-renau',
+        productName: 'Celeste by Jon Renau',
+        description: 'Textured layers for natural movement',
+        price: '$359.00'
       },
       sideSweepLayers: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Side+Sweep+Layers',
-        productUrl: '#',
-        productName: 'Side-Swept Layers',
-        description: 'Long layers with side-swept styling',
-        price: 'Coming Soon'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/SELFIEMODEnew.jpg?v=1709248241',
+        productUrl: 'https://myhairmail.com/collections/raquel-welch-wigs/products/selfie-mode-by-raquel-welch',
+        productName: 'Selfie Mode by Raquel Welch',
+        description: 'Side-swept style with soft layers',
+        price: '$379.00'
       }
     }
   },
@@ -90,19 +90,19 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         description: 'Classic long waves with natural movement',
         price: '$359.00'
       },
-      pixieCut: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Pixie+Cut',
-        productUrl: '/products/pixie-cut',
-        productName: 'Pixie Cut',
-        description: 'Short pixie cut hairstyle for an oval face shape',
-        price: '$20'
+      wavyStyle: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/alexis-12fs8-side__41100.jpg?v=1700050965',
+        productUrl: 'https://myhairmail.com/collections/wavy-wigs/products/alexis-by-jon-renau',
+        productName: 'Alexis by Jon Renau',
+        description: 'Wavy style with face-framing layers',
+        price: '$349.00'
       },
-      bluntBob: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Blunt+Bob',
-        productUrl: '/products/blunt-bob',
-        productName: 'Blunt Bob',
-        description: 'Blunt bob hairstyle for an oval face shape',
-        price: '$18'
+      bobStyle: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/FrontUndercut_6131001R18_0127-Edit.jpg?v=1690638011',
+        productUrl: 'https://myhairmail.com/products/undercut-bob-by-tressallure',
+        productName: 'Undercut Bob by Tressallure',
+        description: 'Modern bob with undercut styling',
+        price: '$299.00'
       }
     }
   },
@@ -135,18 +135,18 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         price: '$379.00'
       },
       sideSweep: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
-        productUrl: '/products/side-sweep',
-        productName: 'Side-Swept Bangs',
-        description: 'Side-swept bangs for a round face shape',
-        price: '$15'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Holland_A4.jpg?v=1682733012',
+        productUrl: 'https://myhairmail.com/products/holland-monofilament-top-by-estetica-designs',
+        productName: 'Holland by Estetica Designs',
+        description: 'Elegant side-swept style with movement',
+        price: '$289.00'
       },
       texturedCrop: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Textured+Crop',
-        productUrl: '/products/textured-crop',
-        productName: 'Textured Crop',
-        description: 'Textured crop hairstyle for a round face shape',
-        price: '$18'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Delight_01.webp?v=1690847189',
+        productUrl: 'https://myhairmail.com/collections/short-wigs/products/delight-by-ellen-wille-changes-collection',
+        productName: 'Delight by Ellen Wille',
+        description: 'Short textured crop with modern styling',
+        price: '$344.25'
       }
     }
   },
@@ -177,18 +177,18 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         price: '$399.00'
       },
       chinLength: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Chin+Length+Cut',
-        productUrl: '/products/chin-length-cut',
-        productName: 'Chin-Length Cut',
-        description: 'Chin-length cut hairstyle for a diamond face shape',
-        price: '$18'
+        imageUrl: 'https://myhairmail.com/cdn/shop/products/EllenWilletemp_1b684c9c-6cc0-48e4-8afb-b8581e620479.png?v=1683252949',
+        productUrl: 'https://myhairmail.com/products/girl-mono-hair-power-synthetic-wig',
+        productName: 'Girl Mono by Ellen Wille',
+        description: 'Chin-length cut with natural movement',
+        price: '$344.25'
       },
       wispyLayers: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Wispy+Layers',
-        productUrl: '/products/wispy-layers',
-        productName: 'Wispy Layers',
-        description: 'Wispy layers hairstyle for a diamond face shape',
-        price: '$20'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/RW-Scene-Stealer-Model-Front5.jpg?v=1688346972',
+        productUrl: 'https://myhairmail.com/products/scene-stealer-by-raquel-welch',
+        productName: 'Scene Stealer by Raquel Welch',
+        description: 'Wispy layered cut with volume',
+        price: '$379.00'
       }
     }
   },
@@ -219,18 +219,18 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         price: '$18'
       },
       sideSweep: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
-        productUrl: '/products/side-swept-bangs',
-        productName: 'Side-Swept Bangs',
-        description: 'Side-swept bangs for a heart face shape',
-        price: '$15'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Ignite-22F16S8-Venice-Blonde-Main__47625.jpg?v=1690035810',
+        productUrl: 'https://myhairmail.com/products/ignite-by-jon-renau?_pos=1&_psq=ignite&_ss=e&_v=1.0',
+        productName: 'Ignite by Jon Renau',
+        description: 'Side-swept style with soft layers',
+        price: '$359.00'
       },
       layered: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Face+Framing+Layers',
-        productUrl: '/products/face-framing-layers',
-        productName: 'Face-Framing Layers',
-        description: 'Face-framing layers hairstyle for a heart face shape',
-        price: '$20'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/2362_Cameron_Creamy-Toffee-scaled.jpg?v=1685291079',
+        productUrl: 'https://myhairmail.com/products/cameron-by-rene-of-paris',
+        productName: 'Cameron by Rene of Paris',
+        description: 'Face-framing layers with movement',
+        price: '$279.00'
       },
       beachWaves: {
         imageUrl: 'https://myhairmail.com/cdn/shop/files/California_Beach_Waves_360x.jpg?v=1723763637',
@@ -260,13 +260,6 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Styles that add height at crown'
     ],
     styleImages: {
-      sideSweep: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Side+Swept+Bangs',
-        productUrl: '/products/side-swept-bangs',
-        productName: 'Side-Swept Bangs',
-        description: 'Side-swept bangs for an oblong face shape',
-        price: '$15'
-      },
       layered: {
         imageUrl: 'https://myhairmail.com/cdn/shop/files/Seville_crushedalmondblonde-R1_360x.jpg?v=1728750264',
         productUrl: 'https://myhairmail.com/collections/belle-tress-wigs/products/seville-by-belle-tress-city-collection',
@@ -274,12 +267,19 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         description: 'Layered cut with width-adding volume',
         price: '$329.00'
       },
+      sideSweep: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/Heidi_S4-28_32RO_Sunrise_Main__50602.webp?v=1690075520',
+        productUrl: 'https://myhairmail.com/products/heidi-by-jon-renau',
+        productName: 'Heidi by Jon Renau',
+        description: 'Side-swept bangs with soft layers',
+        price: '$359.00'
+      },
       wavy: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Waves+and+Curls',
-        productUrl: '/products/waves-and-curls',
-        productName: 'Waves and Curls',
-        description: 'Waves and curls hairstyle for an oblong face shape',
-        price: '$20'
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/RW-Editors-Pick-Elite-Model-Front0.jpg?v=1723895258',
+        productUrl: 'https://myhairmail.com/products/editors-pick-elite-by-raquel-welch?_pos=3&_psq=editors&_ss=e&_v=1.0',
+        productName: 'Editors Pick Elite by Raquel Welch',
+        description: 'Wavy style with natural volume',
+        price: '$379.00'
       }
     }
   }

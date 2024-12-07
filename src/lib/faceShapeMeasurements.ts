@@ -49,12 +49,12 @@ const getFaceMeasurements = (keypoints: Keypoint[]): FaceMeasurements => {
 }
 
 const getBasicMeasurements = (keypoints: Keypoint[]) => {
-  const jawLeft = keypoints[FACE_POINTS.jawLeft]
-  const jawRight = keypoints[FACE_POINTS.jawRight]
+  const jawLeft = keypoints[FACE_POINTS.jawUpperLeft]
+  const jawRight = keypoints[FACE_POINTS.jawUpperRight]
   const chin = keypoints[FACE_POINTS.chin]
   const forehead = keypoints[FACE_POINTS.foreheadTop]
-  const cheekLeft = keypoints[FACE_POINTS.cheekLeft]
-  const cheekRight = keypoints[FACE_POINTS.cheekRight]
+  const cheekLeft = keypoints[FACE_POINTS.cheekboneLeft]
+  const cheekRight = keypoints[FACE_POINTS.cheekboneRight]
 
   // Log raw coordinates for debugging
   console.log('Raw Keypoints:', {
@@ -87,24 +87,23 @@ const calculateCheekbonePosition = (keypoints: Keypoint[]): number => {
     keypoints[FACE_POINTS.foreheadTop].y - keypoints[FACE_POINTS.chin].y
   )
   const cheekboneY = (
-    keypoints[FACE_POINTS.cheekLeft].y + keypoints[FACE_POINTS.cheekRight].y
+    keypoints[FACE_POINTS.cheekboneLeft].y + keypoints[FACE_POINTS.cheekboneRight].y
   ) / 2
   return (cheekboneY - keypoints[FACE_POINTS.foreheadTop].y) / faceHeight
 }
 
 const calculateChinShape = (keypoints: Keypoint[]): number => {
-  // Fallback to using jaw width if chin points aren't available
   try {
     const chinWidth = Math.abs(
-      keypoints[FACE_POINTS.chinLeft]?.x - keypoints[FACE_POINTS.chinRight]?.x
+      keypoints[FACE_POINTS.jawChinLeft]?.x - keypoints[FACE_POINTS.jawChinRight]?.x
     ) || Math.abs(keypoints[FACE_POINTS.chin].x - keypoints[FACE_POINTS.chin].x)
     const jawWidth = Math.abs(
-      keypoints[FACE_POINTS.jawLeft].x - keypoints[FACE_POINTS.jawRight].x
+      keypoints[FACE_POINTS.jawUpperLeft].x - keypoints[FACE_POINTS.jawUpperRight].x
     )
     return chinWidth / jawWidth
   } catch (error) {
     console.log('Error calculating chin shape, using default value')
-    return 0.8 // Default value
+    return 0.8
   }
 }
 
@@ -130,8 +129,8 @@ const calculateFaceThirds = (keypoints: Keypoint[]) => {
 }
 
 const calculateJawlineDefinition = (keypoints: Keypoint[]): number => {
-  const jawLeft = keypoints[FACE_POINTS.jawLeft]
-  const jawRight = keypoints[FACE_POINTS.jawRight]
+  const jawLeft = keypoints[FACE_POINTS.jawUpperLeft]
+  const jawRight = keypoints[FACE_POINTS.jawUpperRight]
   const chin = keypoints[FACE_POINTS.chin]
   
   // Calculate angles at jaw corners
