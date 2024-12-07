@@ -39,13 +39,6 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Chin-length bobs that align with jawline'
     ],
     styleImages: {
-      softLayers: {
-        imageUrl: 'https://myhairmail.com/cdn/shop/files/Alive_03_1024x1024_d9aba1e6-138c-45ca-9c71-849818c78498.webp?v=1683418305',
-        productUrl: 'https://myhairmail.com/collections/wavy-wigs/products/alive-changes-collection-synthetic-wig',
-        productName: 'Alive by Ellen Wille',
-        description: 'Soft, all-over layers with subtle flip at ends',
-        price: '$344.25'
-      },
       texturedLayers: {
         imageUrl: 'https://myhairmail.com/cdn/shop/files/Celeste_FS24_102S12_HD_Main.png?v=1728756848',
         productUrl: 'https://myhairmail.com/collections/jon-renau-wigs/products/celeste-by-jon-renau',
@@ -59,6 +52,13 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         productName: 'Selfie Mode by Raquel Welch',
         description: 'Side-swept style with soft layers',
         price: '$379.00'
+      },
+      squareStyle: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/resized_525x700__0004_ew_perucci2020_Dance_1.jpg?v=1686916044',
+        productUrl: 'https://myhairmail.com/products/dance-by-ellen-wille',
+        productName: 'Dance by Ellen Wille',
+        description: 'Shoulder-length style with soft layers and subtle flip',
+        price: '$344.25'
       }
     }
   },
@@ -211,12 +211,12 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
       'Styles that add volume at the crown'
     ],
     styleImages: {
-      chinBob: {
-        imageUrl: 'https://placehold.co/400x400/png?text=Chin+Length+Bob',
-        productUrl: '/products/chin-length-bob',
-        productName: 'Chin-Length Bob',
-        description: 'Chin-length bob hairstyle for a heart face shape',
-        price: '$18'
+      beachWaves: {
+        imageUrl: 'https://myhairmail.com/cdn/shop/files/California_Beach_Waves_360x.jpg?v=1723763637',
+        productUrl: 'https://myhairmail.com/collections/tressallure-wigs/products/california-beach-waves-by-tressallure-mono-top-look-fabulous-realistic',
+        productName: 'California Beach Waves by Tressallure',
+        description: 'Textured waves with face-framing pieces',
+        price: '$299.00'
       },
       sideSweep: {
         imageUrl: 'https://myhairmail.com/cdn/shop/files/Ignite-22F16S8-Venice-Blonde-Main__47625.jpg?v=1690035810',
@@ -231,13 +231,6 @@ export const FACE_SHAPE_DESCRIPTIONS: Record<string, FaceShapeDetails> = {
         productName: 'Cameron by Rene of Paris',
         description: 'Face-framing layers with movement',
         price: '$279.00'
-      },
-      beachWaves: {
-        imageUrl: 'https://myhairmail.com/cdn/shop/files/California_Beach_Waves_360x.jpg?v=1723763637',
-        productUrl: 'https://myhairmail.com/collections/tressallure-wigs/products/california-beach-waves-by-tressallure-mono-top-look-fabulous-realistic',
-        productName: 'California Beach Waves by Tressallure',
-        description: 'Textured waves with face-framing pieces',
-        price: '$299.00'
       }
     }
   },

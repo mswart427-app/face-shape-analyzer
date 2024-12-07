@@ -112,13 +112,13 @@ const calculateFaceThirds = (keypoints: Keypoint[]) => {
     keypoints[FACE_POINTS.foreheadTop].y - keypoints[FACE_POINTS.chin].y
   )
   
-  // Use eyes as fallback for eyebrows
+  // Use eyes instead of eyebrows for more reliable measurement
   const upperThird = Math.abs(
     keypoints[FACE_POINTS.foreheadTop].y - 
-    (keypoints[FACE_POINTS.eyebrowTop]?.y || keypoints[FACE_POINTS.leftEye].y)
+    keypoints[FACE_POINTS.leftEye].y
   )
   const middleThird = Math.abs(
-    (keypoints[FACE_POINTS.eyebrowTop]?.y || keypoints[FACE_POINTS.leftEye].y) - 
+    keypoints[FACE_POINTS.leftEye].y - 
     keypoints[FACE_POINTS.noseTip].y
   )
   
@@ -156,42 +156,78 @@ const calculateAngle = (p1: Keypoint, p2: Keypoint, p3: Keypoint): number => {
 }
 
 const determineFaceShape = (measurements: FaceMeasurements): string => {
-  const { heightToWidthRatio, foreheadToJawRatio, cheekToJawRatio, jawAngle } = measurements
-
-  // Log the decision process
-  console.log('Shape Determination Process:', {
+  const {
     heightToWidthRatio,
     foreheadToJawRatio,
     cheekToJawRatio,
-    jawAngle
+    jawAngle,
+    cheekbonePosition,
+    chinShape
+  } = measurements
+
+  // Log all measurements for debugging
+  console.log('Shape Determination Measurements:', {
+    heightToWidthRatio: heightToWidthRatio.toFixed(2),
+    foreheadToJawRatio: foreheadToJawRatio.toFixed(2),
+    cheekToJawRatio: cheekToJawRatio.toFixed(2),
+    jawAngle: jawAngle.toFixed(2),
+    cheekbonePosition: cheekbonePosition.toFixed(2),
+    chinShape: chinShape.toFixed(2)
   })
 
-  // Adjusted thresholds and added more logging
+  // Diamond Shape: Wide cheekbones with narrow chin
+  if ((cheekToJawRatio > 1.05 && chinShape < 0.85 && heightToWidthRatio > 1.2) || 
+      (cheekToJawRatio > 1.1 && foreheadToJawRatio < 1.1) ||
+      (cheekToJawRatio > 1.08 && chinShape < 0.8)) {
+    console.log('Detected as Diamond: prominent cheekbones with narrow chin')
+    return 'Diamond'
+  }
+
+  // Heart Shape: Much wider forehead and very pointy chin
+  if (foreheadToJawRatio > 1.15 && chinShape < 0.75) {
+    console.log('Detected as Heart: much wider forehead and very pointy chin')
+    return 'Heart'
+  }
+
+  // Oval: Balanced proportions (made less restrictive)
+  if (heightToWidthRatio > 1.3 && heightToWidthRatio < 1.5 && 
+      cheekToJawRatio > 1.0 && chinShape >= 0.8) {
+    console.log('Detected as Oval: balanced proportions')
+    return 'Oval'
+  }
+
+  // Rest of the shapes remain the same...
   if (heightToWidthRatio > 1.6) {
-    console.log('Detected as Oblong due to height/width ratio > 1.6')
+    console.log('Detected as Oblong: very long face')
     return 'Oblong'
   }
 
-  if (foreheadToJawRatio > 1.15) {
-    const shape = Math.abs(jawAngle) < 15 ? 'Heart' : 'Diamond'
-    console.log(`Detected as ${shape} due to forehead/jaw ratio > 1.15`)
-    return shape
+  if (heightToWidthRatio < 1.2 && Math.abs(jawAngle) < 10) {
+    console.log('Detected as Square: similar width/height, angular jaw')
+    return 'Square'
   }
 
-  if (heightToWidthRatio > 1.3) {
-    const shape = cheekToJawRatio > 1.05 ? 'Oval' : 'Round'
-    console.log(`Detected as ${shape} based on height/width and cheek/jaw ratios`)
-    return shape
+  if (heightToWidthRatio < 1.2 && cheekToJawRatio > 1.1) {
+    console.log('Detected as Round: similar width/height, soft jaw')
+    return 'Round'
   }
 
-  if (heightToWidthRatio < 1.2) {
-    const shape = Math.abs(jawAngle) < 10 ? 'Square' : 'Rectangle'
-    console.log(`Detected as ${shape} based on height/width ratio < 1.2`)
-    return shape
+  // Adjusted scoring weights
+  const scores = {
+    Heart: (foreheadToJawRatio * 1.2) + (1.5 / chinShape), // Reduced weights
+    Diamond: (cheekToJawRatio * 2) + (1 / foreheadToJawRatio) + (1 / chinShape),
+    Oval: (1 / Math.abs(heightToWidthRatio - 1.4)) + cheekToJawRatio + 0.5, // Added bonus for Oval
+    Round: (1 / heightToWidthRatio) + cheekToJawRatio,
+    Square: (1 / Math.abs(heightToWidthRatio - 1)) + (1 / Math.abs(jawAngle)),
+    Oblong: heightToWidthRatio
   }
 
-  console.log('Defaulting to Oval shape')
-  return 'Oval'
+  const shape = Object.entries(scores)
+    .sort(([,a], [,b]) => b - a)[0][0]
+
+  console.log('Shape scores:', scores)
+  console.log('Determined shape:', shape)
+  return shape
 }
 
 const calculateJawAngle = (jawLeft: Keypoint, jawRight: Keypoint, chin: Keypoint) => {
