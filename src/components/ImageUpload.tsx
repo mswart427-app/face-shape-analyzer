@@ -137,7 +137,7 @@ export default function ImageUpload() {
     <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto px-4">
       <div className="max-w-md w-full">
         <h2 className="font-primary text-[24px] font-semibold mb-6 text-center">
-          Let&apos;s Find Your Perfect Style
+          Let's Find Your Perfect Style
         </h2>
         <div className="font-secondary">
           <ul className="text-base text-gray-600 space-y-1 pl-[100px]">
