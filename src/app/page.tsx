@@ -1,4 +1,7 @@
-import ImageUpload from '../components/ImageUpload';
+'use client'
+
+import { useEffect, useState } from 'react'
+import ImageUpload from '../components/ImageUpload'
 
 export default function Home() {
   return (
@@ -6,4 +9,5 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-8">Face Shape Analyzer</h1>
       <ImageUpload />
     </main>
-  );
+  )
+}
