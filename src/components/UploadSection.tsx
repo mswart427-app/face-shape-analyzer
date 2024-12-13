@@ -79,13 +79,27 @@ export function UploadSection() {
           setFaceShape(shape);
           
           if (canvasRef.current) {
-            canvasRef.current.width = imageRef.current.width;
-            canvasRef.current.height = imageRef.current.height;
+            // Set canvas dimensions based on image's natural dimensions
+            const maxWidth = 500; // Maximum width for better performance
+            const aspectRatio = imageRef.current.naturalHeight / imageRef.current.naturalWidth;
+            canvasRef.current.width = Math.min(maxWidth, imageRef.current.naturalWidth);
+            canvasRef.current.height = canvasRef.current.width * aspectRatio;
+
             const ctx = canvasRef.current.getContext('2d');
             if (ctx) {
               ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-              ctx.drawImage(imageRef.current, 0, 0);
-              drawFaceLandmarks(ctx, keypoints);
+              ctx.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+
+              // Scale keypoints to match canvas dimensions
+              const scaleX = canvasRef.current.width / imageRef.current.naturalWidth;
+              const scaleY = canvasRef.current.height / imageRef.current.naturalHeight;
+              const scaledKeypoints = keypoints.map(point => ({
+                ...point,
+                x: point.x * scaleX,
+                y: point.y * scaleY
+              }));
+
+              drawFaceLandmarks(ctx, scaledKeypoints);
             }
           }
         } else {
