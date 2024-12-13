@@ -121,48 +121,14 @@ export function UploadSection() {
   };
 
   const handleTakePhoto = () => {
-    // Create a file input element
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.capture = 'user'; // This triggers the front camera on mobile devices
-    
-    // Handle file selection
-    input.onchange = async (event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        // Reset states
-        setFaceShape(null);
-        setError(null);
-        setReadyToAnalyze(false);
-        setAnalyzing(false);
-        
-        try {
-          const imageUrl = URL.createObjectURL(file);
-          setUploadedImage(imageUrl);
-          
-          // Create a new Image object to handle onload
-          const img = new Image();
-          img.onload = () => {
-            if (imageRef.current) {
-              imageRef.current.src = imageUrl;
-              setReadyToAnalyze(true);
-              // Wait for next render cycle before analyzing
-              setTimeout(() => {
-                analyzeFaceShape();
-              }, 100);
-            }
-          };
-          img.src = imageUrl;
-        } catch (error) {
-          console.error('Error loading image:', error);
-          setError('Error loading image');
-        }
-      }
-    };
-    
-    // Trigger the file input
-    input.click();
+    fileInputRef.current?.click();
+  };
+
+  const handleFileInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await handleFileUpload(file);
+    }
   };
 
   const capturePhoto = () => {
@@ -405,12 +371,10 @@ export function UploadSection() {
           <input
             type="file"
             ref={fileInputRef}
-            className="hidden"
+            onChange={handleFileInputChange}
             accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleFileUpload(file);
-            }}
+            capture="user"
+            className="hidden"
           />
 
           <img
