@@ -119,7 +119,12 @@ export function UploadSection() {
         stream.getTracks().forEach(track => track.stop());
       }
 
-      setIsCameraActive(true); // Set this first to ensure video element is rendered
+      // Set camera active first
+      setIsCameraActive(true);
+      setError(null);
+
+      // Wait for next render cycle to ensure video element is mounted
+      await new Promise(resolve => setTimeout(resolve, 0));
 
       // Request camera access with mobile-friendly constraints
       const constraints = {
@@ -142,6 +147,7 @@ export function UploadSection() {
         });
       }
 
+      // Double check if video element exists after getting stream
       if (!videoRef.current) {
         throw new Error('Video element not available');
       }
@@ -152,7 +158,24 @@ export function UploadSection() {
       videoRef.current.setAttribute('autoplay', 'true');
       videoRef.current.muted = true;
 
-      setError(null);
+      // Wait for video to be ready
+      await new Promise((resolve) => {
+        if (!videoRef.current) return;
+        videoRef.current.onloadedmetadata = () => {
+          console.log('Video metadata loaded');
+          if (videoRef.current) {
+            videoRef.current.play()
+              .then(resolve)
+              .catch(error => {
+                console.error('Error playing video:', error);
+                resolve(null); // Resolve anyway to continue
+              });
+          } else {
+            resolve(null);
+          }
+        };
+      });
+
     } catch (error) {
       console.error('Camera initialization error:', error);
       setError(error instanceof Error ? error.message : 'Failed to access camera');
@@ -248,6 +271,14 @@ export function UploadSection() {
                   autoPlay
                   playsInline
                   muted
+                  onLoadedMetadata={() => {
+                    console.log('Video element loaded metadata');
+                    if (videoRef.current) {
+                      videoRef.current.play().catch(error => {
+                        console.error('Error playing video:', error);
+                      });
+                    }
+                  }}
                   style={{
                     width: '100%',
                     maxHeight: '80vh',
