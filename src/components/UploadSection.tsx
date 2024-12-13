@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Upload, Camera, ArrowRight } from 'lucide-react';
+import { Upload, Camera, ArrowRight, X } from 'lucide-react';
 import { initializeDetector, drawFaceLandmarks } from '@/lib/faceDetection';
 import { calculateFaceShape } from '@/lib/faceShapeMeasurements';
 import { FACE_SHAPE_DESCRIPTIONS, FaceShape } from '@/lib/faceShapeDefinitions';
@@ -9,9 +9,11 @@ export function UploadSection() {
   const [faceShape, setFaceShape] = useState<FaceShape | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [readyToAnalyze, setReadyToAnalyze] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [model, setModel] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -106,12 +108,60 @@ export function UploadSection() {
 
   const handleTakePhoto = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      // Implementation for taking photo will go here
-      // This will be implemented in the next iteration
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
+      });
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        setIsCameraActive(true);
+        setError(null);
+      }
     } catch (error) {
       console.error('Error accessing camera:', error);
       setError('Failed to access camera');
+    }
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      
+      // Set canvas dimensions to match video
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      
+      // Draw the video frame to the canvas
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(video, 0, 0);
+        
+        // Convert the canvas to a blob
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+            handleFileUpload(file);
+            
+            // Stop the camera stream
+            const stream = video.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+            setIsCameraActive(false);
+          }
+        }, 'image/jpeg');
+      }
+    }
+  };
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+      setIsCameraActive(false);
     }
   };
 
@@ -126,27 +176,53 @@ export function UploadSection() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button 
-              onClick={handleUploadClick}
-              className="flex items-center justify-center gap-3 p-4 border-2 border-dashed border-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
-              disabled={analyzing}
-            >
-              <Upload className="w-6 h-6 text-blue-500" />
-              <span className="font-medium text-blue-500">
-                {analyzing ? 'Analyzing...' : 'Upload Photo'}
-              </span>
-            </button>
-            
-            <button 
-              onClick={handleTakePhoto}
-              className="flex items-center justify-center gap-3 p-4 border-2 border-dashed border-green-500 rounded-lg hover:bg-green-50 transition-colors"
-              disabled={analyzing}
-            >
-              <Camera className="w-6 h-6 text-green-500" />
-              <span className="font-medium text-green-500">Take Photo</span>
-            </button>
-          </div>
+          {!isCameraActive ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button 
+                onClick={handleUploadClick}
+                className="flex items-center justify-center gap-3 p-4 border-2 border-dashed border-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
+                disabled={analyzing}
+              >
+                <Upload className="w-6 h-6 text-blue-500" />
+                <span className="font-medium text-blue-500">
+                  {analyzing ? 'Analyzing...' : 'Upload Photo'}
+                </span>
+              </button>
+              
+              <button 
+                onClick={handleTakePhoto}
+                className="flex items-center justify-center gap-3 p-4 border-2 border-dashed border-green-500 rounded-lg hover:bg-green-50 transition-colors"
+                disabled={analyzing}
+              >
+                <Camera className="w-6 h-6 text-green-500" />
+                <span className="font-medium text-green-500">Take Photo</span>
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="relative">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  className="w-full rounded-lg"
+                />
+                <button
+                  onClick={stopCamera}
+                  className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <button
+                onClick={capturePhoto}
+                className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <Camera className="w-5 h-5" />
+                Capture Photo
+              </button>
+            </div>
+          )}
 
           {error && (
             <div className="text-red-500 text-center">
