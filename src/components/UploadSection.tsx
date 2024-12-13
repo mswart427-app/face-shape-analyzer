@@ -135,24 +135,25 @@ export function UploadSection() {
         setFaceShape(null);
         setError(null);
         setReadyToAnalyze(false);
+        setAnalyzing(false);
         
         try {
           const imageUrl = URL.createObjectURL(file);
           setUploadedImage(imageUrl);
           
-          if (imageRef.current) {
-            imageRef.current.src = imageUrl;
-            await new Promise((resolve) => {
-              if (imageRef.current) {
-                imageRef.current.onload = resolve;
-              }
-            });
-            setReadyToAnalyze(true);
-            // Automatically trigger analysis after image is loaded
-            setTimeout(() => {
-              analyzeFaceShape();
-            }, 100);
-          }
+          // Create a new Image object to handle onload
+          const img = new Image();
+          img.onload = () => {
+            if (imageRef.current) {
+              imageRef.current.src = imageUrl;
+              setReadyToAnalyze(true);
+              // Wait for next render cycle before analyzing
+              setTimeout(() => {
+                analyzeFaceShape();
+              }, 100);
+            }
+          };
+          img.src = imageUrl;
         } catch (error) {
           console.error('Error loading image:', error);
           setError('Error loading image');
