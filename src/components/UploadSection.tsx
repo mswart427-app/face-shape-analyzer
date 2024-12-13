@@ -93,7 +93,7 @@ export function UploadSection() {
               // Scale keypoints to match canvas dimensions
               const scaleX = canvasRef.current.width / imageRef.current.naturalWidth;
               const scaleY = canvasRef.current.height / imageRef.current.naturalHeight;
-              const scaledKeypoints = keypoints.map(point => ({
+              const scaledKeypoints = keypoints.map((point: { x: number; y: number }) => ({
                 ...point,
                 x: point.x * scaleX,
                 y: point.y * scaleY
