@@ -106,80 +106,23 @@ export function UploadSection() {
     fileInputRef.current?.click();
   };
 
-  const handleTakePhoto = async () => {
-    try {
-      // First check if we can access the camera
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error('Camera not supported on this device or browser');
+  const handleTakePhoto = () => {
+    // Create a file input element
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.capture = 'user'; // This triggers the front camera on mobile devices
+    
+    // Handle file selection
+    input.onchange = (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        handleFileUpload(file);
       }
-
-      // Request camera access with mobile-friendly constraints
-      const constraints = {
-        video: {
-          facingMode: "user",
-          width: { min: 640, ideal: 1280, max: 1920 },
-          height: { min: 480, ideal: 720, max: 1080 }
-        }
-      };
-
-      console.log('Requesting camera with constraints:', constraints);
-      let stream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-      } catch (err) {
-        console.log('Failed with initial constraints, trying minimal config:', err);
-        // If initial constraints fail, try with minimal constraints
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: true
-        });
-      }
-
-      // Create a video element temporarily
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.setAttribute('playsinline', 'true');
-      video.muted = true;
-
-      // Wait for video to be ready
-      await new Promise((resolve) => {
-        video.onloadedmetadata = () => {
-          video.play().then(resolve);
-        };
-      });
-
-      // Small delay to ensure video is playing
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      // Create canvas and capture photo
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        // Mirror the image if it's from the front camera
-        ctx.scale(-1, 1);
-        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-        ctx.scale(-1, 1); // Reset transform
-        
-        // Convert to blob and handle
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
-            handleFileUpload(file);
-          }
-          
-          // Clean up
-          stream.getTracks().forEach(track => track.stop());
-          video.remove();
-        }, 'image/jpeg');
-      }
-
-      setError(null);
-    } catch (error) {
-      console.error('Camera initialization error:', error);
-      setError(error instanceof Error ? error.message : 'Failed to access camera');
-    }
+    };
+    
+    // Trigger the file input
+    input.click();
   };
 
   const capturePhoto = () => {
