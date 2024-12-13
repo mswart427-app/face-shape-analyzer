@@ -119,47 +119,60 @@ export function UploadSection() {
         stream.getTracks().forEach(track => track.stop());
       }
 
+      setIsCameraActive(true); // Set this first to ensure video element is rendered
+
+      // Small delay to ensure video element is mounted
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      if (!videoRef.current) {
+        throw new Error('Video element not ready');
+      }
+
       // Request camera access with mobile-friendly constraints
       const constraints = {
         video: {
-          facingMode: { exact: "user" }, // Force front camera
+          facingMode: "user", // Don't use exact constraint initially
           width: { min: 640, ideal: 1280, max: 1920 },
           height: { min: 480, ideal: 720, max: 1080 }
         }
       };
 
       console.log('Requesting camera with constraints:', constraints);
-      const stream = await navigator.mediaDevices.getUserMedia(constraints).catch(async (err) => {
-        console.log('Failed with exact user mode, trying without exact:', err);
-        // If exact front camera fails, try without exact constraint
-        return await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "user",
-            width: { min: 640, ideal: 1280, max: 1920 },
-            height: { min: 480, ideal: 720, max: 1080 }
-          }
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (err) {
+        console.log('Failed with initial constraints, trying minimal config:', err);
+        // If initial constraints fail, try with minimal constraints
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true
         });
-      });
-      
-      if (!videoRef.current) {
-        throw new Error('Video element not ready');
       }
 
+      if (!videoRef.current) {
+        throw new Error('Video element not available after stream');
+      }
+
+      // Set up video element
       videoRef.current.srcObject = stream;
-      videoRef.current.setAttribute('playsinline', 'true'); // Important for iOS
-      
-      // Wait for video metadata to load before playing
+      videoRef.current.setAttribute('playsinline', 'true');
+      videoRef.current.setAttribute('autoplay', 'true');
+      videoRef.current.muted = true;
+
+      // Wait for video metadata to load
       await new Promise((resolve) => {
         if (videoRef.current) {
-          videoRef.current.onloadedmetadata = resolve;
+          videoRef.current.onloadedmetadata = () => {
+            console.log('Video metadata loaded');
+            resolve(null);
+          };
         }
       });
 
-      console.log('Video metadata loaded, attempting to play...');
+      console.log('Attempting to play video...');
       try {
         await videoRef.current.play();
         console.log('Video playing successfully');
-        setIsCameraActive(true);
         setError(null);
       } catch (playError) {
         console.error('Error playing video:', playError);
@@ -256,21 +269,26 @@ export function UploadSection() {
                   playsInline
                   muted
                   onLoadedMetadata={() => {
-                    console.log('Video metadata loaded');
+                    console.log('Video metadata loaded in element');
                     if (videoRef.current) {
                       videoRef.current.play().catch(error => {
                         console.error('Error playing video on metadata load:', error);
                       });
                     }
                   }}
+                  onError={(e) => {
+                    console.error('Video element error:', e);
+                    setError('Failed to initialize camera preview');
+                  }}
                   style={{
                     width: '100%',
                     maxHeight: '80vh',
                     objectFit: 'cover',
                     transform: 'scaleX(-1)', // Mirror the preview
-                    backgroundColor: '#000' // Add background color
+                    backgroundColor: '#000', // Add background color
+                    display: 'block' // Ensure proper rendering
                   }}
-                  className="rounded-lg"
+                  className="rounded-lg shadow-lg"
                 />
                 <button
                   onClick={stopCamera}
