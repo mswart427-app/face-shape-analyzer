@@ -1,5 +1,6 @@
 import React from 'react';
 import { Info } from 'lucide-react';
+import Image from 'next/image';
 
 type FaceShapeProps = {
   shape: string;
@@ -12,10 +13,13 @@ export function FaceShapeCard({ shape, description, imageUrl, characteristics }:
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02]">
       <div className="aspect-square relative overflow-hidden">
-        <img
+        <Image
           src={imageUrl}
           alt={`${shape} face shape`}
-          className="object-cover w-full h-full"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          className="object-cover"
+          priority
         />
       </div>
       <div className="p-6">
