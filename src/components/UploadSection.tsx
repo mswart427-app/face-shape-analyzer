@@ -119,19 +119,10 @@ export function UploadSection() {
         stream.getTracks().forEach(track => track.stop());
       }
 
-      setIsCameraActive(true); // Set this first to ensure video element is rendered
-
-      // Small delay to ensure video element is mounted
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      if (!videoRef.current) {
-        throw new Error('Video element not ready');
-      }
-
       // Request camera access with mobile-friendly constraints
       const constraints = {
         video: {
-          facingMode: "user", // Don't use exact constraint initially
+          facingMode: "user",
           width: { min: 640, ideal: 1280, max: 1920 },
           height: { min: 480, ideal: 720, max: 1080 }
         }
@@ -150,7 +141,7 @@ export function UploadSection() {
       }
 
       if (!videoRef.current) {
-        throw new Error('Video element not available after stream');
+        throw new Error('Video element not available');
       }
 
       // Set up video element
@@ -169,15 +160,42 @@ export function UploadSection() {
         }
       });
 
-      console.log('Attempting to play video...');
-      try {
-        await videoRef.current.play();
-        console.log('Video playing successfully');
-        setError(null);
-      } catch (playError) {
-        console.error('Error playing video:', playError);
-        throw new Error('Failed to start camera preview');
+      // Wait for video to start playing
+      await videoRef.current.play();
+      console.log('Video playing successfully');
+
+      // Small delay to ensure the video is actually displaying
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Automatically capture the photo
+      if (videoRef.current && canvasRef.current) {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        
+        // Set canvas dimensions to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw the video frame to the canvas
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(video, 0, 0);
+          
+          // Convert the canvas to a blob
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+              handleFileUpload(file);
+              
+              // Stop the camera stream
+              stream.getTracks().forEach(track => track.stop());
+              setIsCameraActive(false);
+            }
+          }, 'image/jpeg');
+        }
       }
+
+      setError(null);
     } catch (error) {
       console.error('Camera initialization error:', error);
       setError(error instanceof Error ? error.message : 'Failed to access camera');
