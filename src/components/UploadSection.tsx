@@ -128,10 +128,35 @@ export function UploadSection() {
     input.capture = 'user'; // This triggers the front camera on mobile devices
     
     // Handle file selection
-    input.onchange = (event) => {
+    input.onchange = async (event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
-        handleFileUpload(file);
+        // Reset states
+        setFaceShape(null);
+        setError(null);
+        setReadyToAnalyze(false);
+        
+        try {
+          const imageUrl = URL.createObjectURL(file);
+          setUploadedImage(imageUrl);
+          
+          if (imageRef.current) {
+            imageRef.current.src = imageUrl;
+            await new Promise((resolve) => {
+              if (imageRef.current) {
+                imageRef.current.onload = resolve;
+              }
+            });
+            setReadyToAnalyze(true);
+            // Automatically trigger analysis after image is loaded
+            setTimeout(() => {
+              analyzeFaceShape();
+            }, 100);
+          }
+        } catch (error) {
+          console.error('Error loading image:', error);
+          setError('Error loading image');
+        }
       }
     };
     
