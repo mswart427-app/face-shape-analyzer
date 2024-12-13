@@ -119,6 +119,8 @@ export function UploadSection() {
         stream.getTracks().forEach(track => track.stop());
       }
 
+      setIsCameraActive(true); // Set this first to ensure video element is rendered
+
       // Request camera access with mobile-friendly constraints
       const constraints = {
         video: {
@@ -150,51 +152,6 @@ export function UploadSection() {
       videoRef.current.setAttribute('autoplay', 'true');
       videoRef.current.muted = true;
 
-      // Wait for video metadata to load
-      await new Promise((resolve) => {
-        if (videoRef.current) {
-          videoRef.current.onloadedmetadata = () => {
-            console.log('Video metadata loaded');
-            resolve(null);
-          };
-        }
-      });
-
-      // Wait for video to start playing
-      await videoRef.current.play();
-      console.log('Video playing successfully');
-
-      // Small delay to ensure the video is actually displaying
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Automatically capture the photo
-      if (videoRef.current && canvasRef.current) {
-        const video = videoRef.current;
-        const canvas = canvasRef.current;
-        
-        // Set canvas dimensions to match video
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        // Draw the video frame to the canvas
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(video, 0, 0);
-          
-          // Convert the canvas to a blob
-          canvas.toBlob((blob) => {
-            if (blob) {
-              const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
-              handleFileUpload(file);
-              
-              // Stop the camera stream
-              stream.getTracks().forEach(track => track.stop());
-              setIsCameraActive(false);
-            }
-          }, 'image/jpeg');
-        }
-      }
-
       setError(null);
     } catch (error) {
       console.error('Camera initialization error:', error);
@@ -219,7 +176,10 @@ export function UploadSection() {
       // Draw the video frame to the canvas
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.drawImage(video, 0, 0);
+        // Mirror the image if it's from the front camera
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+        ctx.scale(-1, 1); // Reset transform
         
         // Convert the canvas to a blob
         canvas.toBlob((blob) => {
@@ -229,7 +189,9 @@ export function UploadSection() {
             
             // Stop the camera stream
             const stream = video.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
+            if (stream) {
+              stream.getTracks().forEach(track => track.stop());
+            }
             setIsCameraActive(false);
           }
         }, 'image/jpeg');
@@ -286,25 +248,13 @@ export function UploadSection() {
                   autoPlay
                   playsInline
                   muted
-                  onLoadedMetadata={() => {
-                    console.log('Video metadata loaded in element');
-                    if (videoRef.current) {
-                      videoRef.current.play().catch(error => {
-                        console.error('Error playing video on metadata load:', error);
-                      });
-                    }
-                  }}
-                  onError={(e) => {
-                    console.error('Video element error:', e);
-                    setError('Failed to initialize camera preview');
-                  }}
                   style={{
                     width: '100%',
                     maxHeight: '80vh',
                     objectFit: 'cover',
                     transform: 'scaleX(-1)', // Mirror the preview
-                    backgroundColor: '#000', // Add background color
-                    display: 'block' // Ensure proper rendering
+                    backgroundColor: '#000',
+                    display: 'block'
                   }}
                   className="rounded-lg shadow-lg"
                 />
