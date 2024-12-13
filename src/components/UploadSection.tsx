@@ -122,36 +122,48 @@ export function UploadSection() {
       // Request camera access with mobile-friendly constraints
       const constraints = {
         video: {
-          facingMode: 'user',
-          width: { ideal: 1280, max: 1920 },
-          height: { ideal: 720, max: 1080 },
-          aspectRatio: { ideal: 1.7777777778 }
+          facingMode: { exact: "user" }, // Force front camera
+          width: { min: 640, ideal: 1280, max: 1920 },
+          height: { min: 480, ideal: 720, max: 1080 }
         }
       };
 
       console.log('Requesting camera with constraints:', constraints);
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        
-        // Wait for video metadata to load before playing
-        await new Promise((resolve) => {
-          if (videoRef.current) {
-            videoRef.current.onloadedmetadata = resolve;
+      const stream = await navigator.mediaDevices.getUserMedia(constraints).catch(async (err) => {
+        console.log('Failed with exact user mode, trying without exact:', err);
+        // If exact front camera fails, try without exact constraint
+        return await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",
+            width: { min: 640, ideal: 1280, max: 1920 },
+            height: { min: 480, ideal: 720, max: 1080 }
           }
         });
+      });
+      
+      if (!videoRef.current) {
+        throw new Error('Video element not ready');
+      }
 
-        console.log('Video metadata loaded, attempting to play...');
-        try {
-          await videoRef.current.play();
-          console.log('Video playing successfully');
-          setIsCameraActive(true);
-          setError(null);
-        } catch (playError) {
-          console.error('Error playing video:', playError);
-          throw new Error('Failed to start camera preview');
+      videoRef.current.srcObject = stream;
+      videoRef.current.setAttribute('playsinline', 'true'); // Important for iOS
+      
+      // Wait for video metadata to load before playing
+      await new Promise((resolve) => {
+        if (videoRef.current) {
+          videoRef.current.onloadedmetadata = resolve;
         }
+      });
+
+      console.log('Video metadata loaded, attempting to play...');
+      try {
+        await videoRef.current.play();
+        console.log('Video playing successfully');
+        setIsCameraActive(true);
+        setError(null);
+      } catch (playError) {
+        console.error('Error playing video:', playError);
+        throw new Error('Failed to start camera preview');
       }
     } catch (error) {
       console.error('Camera initialization error:', error);
@@ -243,12 +255,11 @@ export function UploadSection() {
                   autoPlay
                   playsInline
                   muted
-                  onPlay={() => {
-                    console.log('Video stream started');
+                  onLoadedMetadata={() => {
+                    console.log('Video metadata loaded');
                     if (videoRef.current) {
                       videoRef.current.play().catch(error => {
-                        console.error('Error playing video:', error);
-                        setError('Failed to start video stream');
+                        console.error('Error playing video on metadata load:', error);
                       });
                     }
                   }}
@@ -256,7 +267,8 @@ export function UploadSection() {
                     width: '100%',
                     maxHeight: '80vh',
                     objectFit: 'cover',
-                    transform: 'scaleX(-1)' // Mirror the preview
+                    transform: 'scaleX(-1)', // Mirror the preview
+                    backgroundColor: '#000' // Add background color
                   }}
                   className="rounded-lg"
                 />
