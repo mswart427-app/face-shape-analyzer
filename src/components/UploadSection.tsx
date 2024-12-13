@@ -113,19 +113,6 @@ export function UploadSection() {
         throw new Error('Camera not supported on this device or browser');
       }
 
-      // Stop any existing streams
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-      }
-
-      // Set camera active first
-      setIsCameraActive(true);
-      setError(null);
-
-      // Wait for next render cycle to ensure video element is mounted
-      await new Promise(resolve => setTimeout(resolve, 0));
-
       // Request camera access with mobile-friendly constraints
       const constraints = {
         video: {
@@ -147,43 +134,51 @@ export function UploadSection() {
         });
       }
 
-      // Double check if video element exists after getting stream
-      if (!videoRef.current) {
-        throw new Error('Video element not available');
-      }
-
-      // Set up video element
-      videoRef.current.srcObject = stream;
-      videoRef.current.setAttribute('playsinline', 'true');
-      videoRef.current.setAttribute('autoplay', 'true');
-      videoRef.current.muted = true;
+      // Create a video element temporarily
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.setAttribute('playsinline', 'true');
+      video.muted = true;
 
       // Wait for video to be ready
       await new Promise((resolve) => {
-        if (!videoRef.current) return;
-        videoRef.current.onloadedmetadata = () => {
-          console.log('Video metadata loaded');
-          if (videoRef.current) {
-            videoRef.current.play()
-              .then(resolve)
-              .catch(error => {
-                console.error('Error playing video:', error);
-                resolve(null); // Resolve anyway to continue
-              });
-          } else {
-            resolve(null);
-          }
+        video.onloadedmetadata = () => {
+          video.play().then(resolve);
         };
       });
 
+      // Small delay to ensure video is playing
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Create canvas and capture photo
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Mirror the image if it's from the front camera
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+        ctx.scale(-1, 1); // Reset transform
+        
+        // Convert to blob and handle
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+            handleFileUpload(file);
+          }
+          
+          // Clean up
+          stream.getTracks().forEach(track => track.stop());
+          video.remove();
+        }, 'image/jpeg');
+      }
+
+      setError(null);
     } catch (error) {
       console.error('Camera initialization error:', error);
       setError(error instanceof Error ? error.message : 'Failed to access camera');
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-      }
-      setIsCameraActive(false);
     }
   };
 
