@@ -9,7 +9,7 @@ const faceShapes = [
   {
     shape: 'Oval',
     description: 'Considered the ideal face shape with balanced proportions.',
-    imageUrl: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://cdn.shopify.com/s/files/1/0753/9556/3833/files/oval-face-shape.jpg?v=1734054935',
     characteristics: [
       'Length is about 1.5 times the width',
       'Softly rounded jawline',
@@ -19,7 +19,7 @@ const faceShapes = [
   {
     shape: 'Round',
     description: 'Characterized by soft angles and equal length and width.',
-    imageUrl: 'https://images.unsplash.com/photo-1557053910-d9eadeed1c58?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://cdn.shopify.com/s/files/1/0753/9556/3833/files/round-face-shape.jpg?v=1734054935',
     characteristics: [
       'Face length and width are similar',
       'Rounded jawline and chin',
@@ -29,7 +29,7 @@ const faceShapes = [
   {
     shape: 'Square',
     description: 'Strong jawline with angular features.',
-    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://cdn.shopify.com/s/files/1/0753/9556/3833/files/square-face-shape.jpg?v=1734054934',
     characteristics: [
       'Strong, angular jawline',
       'Straight sides',
@@ -39,7 +39,7 @@ const faceShapes = [
   {
     shape: 'Heart',
     description: 'Wider forehead tapering to a pointed chin.',
-    imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://cdn.shopify.com/s/files/1/0753/9556/3833/files/heart-face-shape.jpg?v=1734054935',
     characteristics: [
       'Wider forehead',
       'High cheekbones',
