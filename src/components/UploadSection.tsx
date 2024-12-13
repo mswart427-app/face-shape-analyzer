@@ -118,12 +118,18 @@ export function UploadSection() {
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        await videoRef.current.play();
         setIsCameraActive(true);
         setError(null);
       }
     } catch (error) {
       console.error('Error accessing camera:', error);
       setError('Failed to access camera');
+      if (videoRef.current?.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+      setIsCameraActive(false);
     }
   };
 
@@ -205,6 +211,15 @@ export function UploadSection() {
                   ref={videoRef}
                   autoPlay
                   playsInline
+                  onPlay={() => {
+                    console.log('Video stream started');
+                    if (videoRef.current) {
+                      videoRef.current.play().catch(error => {
+                        console.error('Error playing video:', error);
+                        setError('Failed to start video stream');
+                      });
+                    }
+                  }}
                   className="w-full rounded-lg"
                 />
                 <button
