@@ -108,23 +108,54 @@ export function UploadSection() {
 
   const handleTakePhoto = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+      // First check if we can access the camera
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera not supported on this device or browser');
+      }
+
+      // Stop any existing streams
+      if (videoRef.current?.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+
+      // Request camera access with mobile-friendly constraints
+      const constraints = {
+        video: {
           facingMode: 'user',
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        } 
-      });
+          width: { ideal: 1280, max: 1920 },
+          height: { ideal: 720, max: 1080 },
+          aspectRatio: { ideal: 1.7777777778 }
+        }
+      };
+
+      console.log('Requesting camera with constraints:', constraints);
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-        setIsCameraActive(true);
-        setError(null);
+        
+        // Wait for video metadata to load before playing
+        await new Promise((resolve) => {
+          if (videoRef.current) {
+            videoRef.current.onloadedmetadata = resolve;
+          }
+        });
+
+        console.log('Video metadata loaded, attempting to play...');
+        try {
+          await videoRef.current.play();
+          console.log('Video playing successfully');
+          setIsCameraActive(true);
+          setError(null);
+        } catch (playError) {
+          console.error('Error playing video:', playError);
+          throw new Error('Failed to start camera preview');
+        }
       }
     } catch (error) {
-      console.error('Error accessing camera:', error);
-      setError('Failed to access camera');
+      console.error('Camera initialization error:', error);
+      setError(error instanceof Error ? error.message : 'Failed to access camera');
       if (videoRef.current?.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
@@ -211,6 +242,7 @@ export function UploadSection() {
                   ref={videoRef}
                   autoPlay
                   playsInline
+                  muted
                   onPlay={() => {
                     console.log('Video stream started');
                     if (videoRef.current) {
@@ -220,7 +252,13 @@ export function UploadSection() {
                       });
                     }
                   }}
-                  className="w-full rounded-lg"
+                  style={{
+                    width: '100%',
+                    maxHeight: '80vh',
+                    objectFit: 'cover',
+                    transform: 'scaleX(-1)' // Mirror the preview
+                  }}
+                  className="rounded-lg"
                 />
                 <button
                   onClick={stopCamera}
